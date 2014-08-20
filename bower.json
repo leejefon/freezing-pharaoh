@@ -1,0 +1,28 @@
+{
+  "name": "Leejefon",
+  "version": "0.1.0",
+  "authors": [
+    "Jeff Lee <leejefon@gmail.com>"
+  ],
+  "description": "My Homepage",
+  "main": "app.js",
+  "license": "MIT",
+  "homepage": "https://jefflee.net",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular": "~1.2.20",
+    "angular-route": "~1.2.20",
+    "angular-cookies": "~1.2.20",
+    "angular-loading-bar": "~0.3.0",
+    "jquery": "~2.1.1",
+    "toastr": "~2.0.1",
+    "requirejs": "~2.1.11"
+  }
+}
