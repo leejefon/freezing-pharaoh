@@ -20,12 +20,14 @@
     "iniparser": "^1.0.5",
     "newrelic": "^1.8.0",
     "nodetime": "^0.8.15",
+    "passport": "^0.2.1",
+    "passport-youtube": "0.0.6",
     "rc": "~0.5.0",
+    "request": "^2.48.0",
     "sails": "~0.10.4",
     "sails-mongo": "^0.10.4"
   },
-  "devDependencies": {
-  },
+  "devDependencies": {},
   "scripts": {
     "start": "node app.js"
   }

@@ -10,9 +10,7 @@
 module.exports = (function(){
 
 	function index (req, res) {
-		return res.json({
-			data: 'Hello World'
-		});
+		return res.view();
 	}
 
 	function search (req, res) {
@@ -24,9 +22,20 @@ module.exports = (function(){
 		});
 	}
 
+	function youtube_login (req, res) {
+
+	}
+
+	function youtube_callback (req, res) {
+		console.log(req.user);
+		return res.redirect('/');
+	}
+
     return {
         index: index,
 		search: search,
+		youtube_login: youtube_login,
+		youtube_callback: youtube_callback,
 
         _config: {}
     };

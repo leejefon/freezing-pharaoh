@@ -19,6 +19,11 @@
 
 module.exports.policies = {
 
-    '*': true
+    '*': true,
+
+    HomeController: {
+        youtube_login: 'YouTubeOAuthRequest',
+        youtube_callback: 'YouTubeOAuthCallback'
+    }
 
 };
