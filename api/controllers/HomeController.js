@@ -14,11 +14,14 @@ module.exports = (function(){
 	}
 
 	function search (req, res) {
-		return res.json({
-			status: 'OK',
-			data: {
-				results: []
-			}
+		YouTubeService.searchHistory({
+			query: req.query.q,
+			accessToken: req.user.accessToken
+		}, function (err, data) {
+			return res.json({
+				status: 'OK',
+				data: data
+			});
 		});
 	}
 
