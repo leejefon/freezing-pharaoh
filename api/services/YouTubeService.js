@@ -12,7 +12,7 @@ var request = require('request');
 module.exports = (function(){
 
     var converterAPI = 'http://youtubeinmp3.com/fetch/?api=advanced&format=JSON';
-    var youtubeHistoryAPI = 'https://gdata.youtube.com/feeds/api/users/default/watch_history?v=2';
+    var youtubeHistoryAPI = 'https://gdata.youtube.com/feeds/api/users/default/watch_history?v=2&alt=json';
     var idolAPI = 'https://api.idolondemand.com/1/api/async';
 
     function searchHistory (params, cb) {
@@ -22,7 +22,7 @@ module.exports = (function(){
                 Authorization: 'Bearer ' + params.accessToken
             }
         }, function (err, response, body) {
-            if (!error && response.statusCode == 200) {
+            if (!err && response.statusCode == 200) {
                 var videos = JSON.parse(body);
                 return cb(null, videos);
             }

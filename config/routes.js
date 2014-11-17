@@ -23,7 +23,7 @@
 module.exports.routes = {
 
     'GET /': 'HomeController.index',
-    'GET /serach': 'HomeController.search',
+    'GET /search': 'HomeController.search',
 
     'GET /oauth/youtube'         : 'HomeController.youtube_login',
     'GET /oauth/youtube/callback': 'HomeController.youtube_callback'
