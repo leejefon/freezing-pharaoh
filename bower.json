@@ -1,13 +1,13 @@
 {
-  "name": "Leejefon",
+  "name": "FreezingPharaoh",
   "version": "0.1.0",
   "authors": [
     "Jeff Lee <leejefon@gmail.com>"
   ],
-  "description": "My Homepage",
+  "description": "YouTube History Search",
   "main": "app.js",
   "license": "MIT",
-  "homepage": "https://jefflee.net",
+  "homepage": "https://freezing-pharaoh.herokuapp.com",
   "private": true,
   "ignore": [
     "**/.*",
