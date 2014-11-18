@@ -29,10 +29,10 @@ module.exports = (function(){
         }, function (err, response, body) {
             var results = JSON.parse(body).entities.slice(0, 5).map(function (entry) { return entry.text; });
 
-            // Since text search not enabled, need to do or searches
+            // Since text search not enabled in db, query all then filter
             Cache.find({
                 // $or: [
-                    // { 'data.all': { $regex: params.query } }
+                    // { 'data.all': { $regex: params.query } },
                     // { 'data.all': { like: results[0] } },
                     // { 'data.all': { like: results[1] } },
                     // { 'data.all': { like: results[2] } },
@@ -40,7 +40,9 @@ module.exports = (function(){
                     // { 'data.all': { like: results[4] } }
                 // ]
             }, function (err, data) {
-                return cb(null, data);
+                return cb(null, data.filter(function (item) {
+                    return true;
+                }));
             });
         });
     }
@@ -67,7 +69,9 @@ module.exports = (function(){
 
                     v.all = v.title + ' ' + v.desc + ' ' + v.author + ' ' + v.transcribedText;
 
-                    Cache.create({
+                    Cache.findOrCreate({
+                        key: entry.id.$t,
+                    }, {
                         key: entry.id.$t,
                         data: v
                     }, function (err, data) {
