@@ -49,3 +49,13 @@ a:hover {
     background: red;
     color: white;
 }
+
+ul {
+    list-style: none;
+}
+
+li {
+    height: 50px;
+    padding: 5px;
+    border-bottom: 1px solid #BBB;
+}

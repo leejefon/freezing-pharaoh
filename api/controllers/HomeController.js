@@ -25,6 +25,7 @@ module.exports = (function(){
 		YouTubeService.search({
 			query: req.query.q
 		}, function (err, data) {
+			console.log(data);
 			return res.view({
 				results: data
 			});

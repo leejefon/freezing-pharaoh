@@ -6,8 +6,14 @@
 
 <hr />
 
-<ul>
-    <% for (var i in results) { %>
-        <li><img src="<%= results[i].thumbnail %>" /></li>
-    <% } %>
-</ul>
+<% for (var i in results) { %>
+    <div class="media">
+        <a class="media-left" href="<%= results[i].data.link %>">
+            <img src="<%= results[i].data.thumbnail %>" alt="<%= results[i].data.title %>" />
+        </a>
+        <div class="media-body">
+            <h4 class="media-heading"><a href="<%= results[i].data.link %>"><%= results[i].data.title %></a></h4>
+            <%= results[i].data.desc %>
+        </div>
+    </div>
+<% } %>
