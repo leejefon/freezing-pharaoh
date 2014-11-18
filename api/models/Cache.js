@@ -17,7 +17,7 @@ module.exports = (function(){
             required: true
         },
         data: {
-            type: 'string',
+            type: 'json',
             required: true
         }
     };

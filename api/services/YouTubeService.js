@@ -16,15 +16,32 @@ module.exports = (function(){
     var converterAPI = 'http://youtubeinmp3.com/fetch/?video=';
     var youtubeAPI = 'https://gdata.youtube.com/feeds/api';
     var idolAPI = 'https://api.idolondemand.com/1/api/async';
+    var idolAPIsync = 'https://api.idolondemand.com/1/api/sync';
     var statusCheckUrl = 'https://api.idolondemand.com/1/job/status/';
 
     function search (params, cb) {
-        Cache.find({
-            data: {
-                like: params.query
+        request.get({
+            url: idolAPIsync + '/findrelatedconcepts/v1',
+            qs: {
+                text: params.query,
+                apikey: process.env.IDOL_API_KEY
             }
-        }, function (err, data) {
-            return cb(null, data);
+        }, function (err, response, body) {
+            var results = JSON.parse(body).entities.slice(0, 5).map(function (entry) { return entry.text; });
+
+            // Since text search not enabled, need to do or searches
+            Cache.find({
+                // $or: [
+                    // { 'data.all': { $regex: params.query } }
+                    // { 'data.all': { like: results[0] } },
+                    // { 'data.all': { like: results[1] } },
+                    // { 'data.all': { like: results[2] } },
+                    // { 'data.all': { like: results[3] } },
+                    // { 'data.all': { like: results[4] } }
+                // ]
+            }, function (err, data) {
+                return cb(null, data);
+            });
         });
     }
 
@@ -37,13 +54,27 @@ module.exports = (function(){
         }, function (err, response, body) {
             if (!err && response.statusCode === 200) {
                 var videos = JSON.parse(body);
+
                 return cb(null, videos.feed.entry.map(function (entry) {
                     var v = {
                         title: entry.title.$t,
-                        link: entry.content.src
+                        link: entry.content.src,
+                        thumbnail: entry.media$group.media$thumbnail[0].url,
+                        desc: entry.media$group.media$description.$t,
+                        author: entry.media$group.media$credit[0].yt$display,
+                        transcribedText: ''
                     };
 
-                    convertVideo(v);
+                    v.all = v.title + ' ' + v.desc + ' ' + v.author + ' ' + v.transcribedText;
+
+                    Cache.create({
+                        key: entry.id.$t,
+                        data: v
+                    }, function (err, data) {
+                        // do nothing
+                    });
+
+                    // convertVideo(v);
                     return v;
                 }));
             }
@@ -63,11 +94,12 @@ module.exports = (function(){
             url: idolAPI + '/recognizespeech/v1',
             qs: {
                 url: process.env.PROJECT_URL + '/videos/' + video.title + ".mp3",
-                // url: 'http://taiwanday.ca/videos/' + video.title,
                 apikey: process.env.IDOL_API_KEY
             }
         }, function (err, response, body) {
             if (!err && response.statusCode === 200) {
+                // Note: since we are using async, we will get an jobid
+
                 var result = JSON.parse(body);
                 return cb(null, result);
             }

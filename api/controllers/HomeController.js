@@ -11,14 +11,14 @@ module.exports = (function(){
 
 	function index (req, res) {
 		if (req.user) {
-			// YouTubeService.populateHistory({
-			// 	accessToken: req.user.accessToken
-			// }, function (err, data) {
-			//
-			// });
+			YouTubeService.populateHistory({
+				accessToken: req.user.accessToken
+			}, function (err, data) {
+				return res.json(data);
+			});
+		} else {
+			return res.view();
 		}
-
-		return res.view();
 	}
 
 	function search (req, res) {
