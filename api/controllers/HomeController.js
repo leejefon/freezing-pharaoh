@@ -10,13 +10,20 @@
 module.exports = (function(){
 
 	function index (req, res) {
+		if (req.user) {
+			// YouTubeService.populateHistory({
+			// 	accessToken: req.user.accessToken
+			// }, function (err, data) {
+			//
+			// });
+		}
+
 		return res.view();
 	}
 
 	function search (req, res) {
-		YouTubeService.searchHistory({
-			query: req.query.q,
-			accessToken: req.user.accessToken
+		YouTubeService.search({
+			query: req.query.q
 		}, function (err, data) {
 			return res.json({
 				status: 'OK',
@@ -30,7 +37,6 @@ module.exports = (function(){
 	}
 
 	function youtube_callback (req, res) {
-		console.log(req.user);
 		return res.redirect('/');
 	}
 
