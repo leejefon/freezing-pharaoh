@@ -30,9 +30,12 @@
                                         <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <tableView clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="97" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="x7y-Pb-3cn">
-                                        <rect key="frame" x="0.0" y="667" width="375" height="350"/>
+                                    <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="97" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="x7y-Pb-3cn">
+                                        <rect key="frame" x="0.0" y="570" width="375" height="350"/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="350" id="kHz-1z-63j"/>
+                                        </constraints>
                                         <prototypes>
                                             <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Cell1" rowHeight="100" id="Yp0-An-0At">
                                                 <autoresizingMask key="autoresizingMask"/>
@@ -87,17 +90,23 @@
                                             <outlet property="delegate" destination="BYZ-38-t0r" id="QGP-Ra-VoA"/>
                                         </connections>
                                     </tableView>
-                                    <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" hidesWhenStopped="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="pZ7-TL-pg2">
-                                        <rect key="frame" x="169" y="812" width="37" height="37"/>
+                                    <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="pZ7-TL-pg2">
+                                        <rect key="frame" x="169" y="782" width="37" height="37"/>
                                     </activityIndicatorView>
                                 </subviews>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <constraints>
+                                    <constraint firstItem="x7y-Pb-3cn" firstAttribute="leading" secondItem="NWq-3a-K2n" secondAttribute="leading" id="3RM-3y-X4V"/>
                                     <constraint firstAttribute="height" constant="1000" id="7KL-iF-Jvd"/>
                                     <constraint firstItem="uN6-1U-pGI" firstAttribute="leading" secondItem="NWq-3a-K2n" secondAttribute="leading" id="LWG-SD-Yap"/>
                                     <constraint firstAttribute="bottom" secondItem="uN6-1U-pGI" secondAttribute="bottom" id="TXX-Wo-ymC"/>
                                     <constraint firstAttribute="trailing" secondItem="uN6-1U-pGI" secondAttribute="trailing" id="bRX-wY-fSY"/>
                                     <constraint firstItem="uN6-1U-pGI" firstAttribute="top" secondItem="NWq-3a-K2n" secondAttribute="top" constant="370" id="bdE-aH-Qno"/>
+                                    <constraint firstAttribute="centerX" secondItem="pZ7-TL-pg2" secondAttribute="centerX" id="ddp-6S-cFO"/>
+                                    <constraint firstAttribute="trailing" secondItem="x7y-Pb-3cn" secondAttribute="trailing" id="kfh-2t-G84"/>
+                                    <constraint firstAttribute="bottom" secondItem="x7y-Pb-3cn" secondAttribute="bottom" constant="80" id="lCL-tY-hv6"/>
+                                    <constraint firstAttribute="centerX" secondItem="uN6-1U-pGI" secondAttribute="centerX" id="o3G-mz-4KN"/>
+                                    <constraint firstItem="pZ7-TL-pg2" firstAttribute="top" secondItem="uN6-1U-pGI" secondAttribute="bottom" constant="115" id="yc0-5Z-skX"/>
                                 </constraints>
                                 <variation key="default">
                                     <mask key="constraints">
