@@ -24,6 +24,7 @@ module.exports.routes = {
 
     'GET /': 'HomeController.index',
     'GET /search': 'HomeController.search',
+    'GET /subtitle': 'HomeController.subtitle',
     'GET /transcribe': 'HomeController.transcribe',
     'GET /transcribe/status/:jobid': 'HomeController.transcribe_status_check',
 

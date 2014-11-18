@@ -14,7 +14,7 @@ var fs = require('fs');
 module.exports = (function(){
 
     var converterAPI = 'http://youtubeinmp3.com/fetch/?video=';
-    var youtubeHistoryAPI = 'https://gdata.youtube.com/feeds/api/users/default/watch_history?v=2&alt=json';
+    var youtubeAPI = 'https://gdata.youtube.com/feeds/api';
     var idolAPI = 'https://api.idolondemand.com/1/api/async';
     var statusCheckUrl = 'https://api.idolondemand.com/1/job/status/';
 
@@ -30,7 +30,7 @@ module.exports = (function(){
 
     function populateHistory (params, cb) {
         request.get({
-            url: youtubeHistoryAPI,
+            url: youtubeAPI + '/users/default/watch_history?v=2&alt=json',
             headers: {
                 Authorization: 'Bearer ' + params.accessToken
             }
@@ -47,7 +47,25 @@ module.exports = (function(){
                     return v;
                 }));
             }
-        })
+        });
+    }
+
+    function getSubtitle (params, cb) {
+        request.get({
+            url: youtubeAPI + '/videos/' + params.youtubeId + '/captions?alt=json',
+            headers: {
+                Authorization: 'Bearer ' + params.accessToken,
+                'X-GData-Key': 'AIzaSyCkHDmByiXvmG-BYVf2omyrzZ5lLHuT1wg'
+            }
+        }, function (err, response, body) {
+            console.log(body);
+            if (!err && response.statusCode === 200) {
+                var result = JSON.parse(body);
+                return cb(null, result);
+            } else {
+                return cb(err);
+            }
+        });
     }
 
     function convertVideo (video) {
@@ -91,6 +109,7 @@ module.exports = (function(){
     return {
         search: search,
         populateHistory: populateHistory,
+        getSubtitle: getSubtitle,
         convertVideo: convertVideo,
         transcribeVideo: transcribeVideo,
         transcribeStatusCheck: transcribeStatusCheck

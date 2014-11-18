@@ -29,6 +29,19 @@ module.exports = (function(){
 		});
 	}
 
+	function subtitle (req, res) {
+		YouTubeService.getSubtitle({
+			youtubeId: req.query.v,
+			accessToken: req.user.accessToken
+		}, function (err, data) {
+			if (err) {
+				return res.json(err);
+			}
+
+			return res.json(data);
+		});
+	}
+
 	function transcribe (req, res) {
 		YouTubeService.transcribeVideo({
 			title: req.query.title
@@ -54,6 +67,7 @@ module.exports = (function(){
     return {
         index: index,
 		search: search,
+		subtitle: subtitle,
 		transcribe: transcribe,
 		transcribe_status_check: transcribe_status_check,
 
