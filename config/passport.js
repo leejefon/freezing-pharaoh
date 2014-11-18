@@ -29,7 +29,7 @@ Passport.use(new YouTubeStrategy({
 ));
 
 module.exports = {
-    express: {
+    http: {
         customMiddleware: function (app) {
             app.use(Passport.initialize());
             app.use(Passport.session());

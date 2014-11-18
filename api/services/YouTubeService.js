@@ -16,6 +16,7 @@ module.exports = (function(){
     var converterAPI = 'http://youtubeinmp3.com/fetch/?video=';
     var youtubeHistoryAPI = 'https://gdata.youtube.com/feeds/api/users/default/watch_history?v=2&alt=json';
     var idolAPI = 'https://api.idolondemand.com/1/api/async';
+    var statusCheckUrl = 'https://api.idolondemand.com/1/job/status/';
 
     function search (params, cb) {
         Cache.find({
@@ -34,7 +35,7 @@ module.exports = (function(){
                 Authorization: 'Bearer ' + params.accessToken
             }
         }, function (err, response, body) {
-            if (!err && response.statusCode == 200) {
+            if (!err && response.statusCode === 200) {
                 var videos = JSON.parse(body);
                 return cb(null, videos.feed.entry.map(function (entry) {
                     var v = {
@@ -57,28 +58,40 @@ module.exports = (function(){
         });
     }
 
-    function transcribeVideo (video) {
+    function transcribeVideo (video, async, cb) {
         request.get({
             url: idolAPI,
             qs: {
-                url: process.env.PROJECT_URL + '/downloads/' + video.title + ".mp3",
+                url: process.env.PROJECT_URL + '/videos/' + video.title + ".mp3",
                 apikey: process.env.IDOL_API_KEY
             }
         }, function (err, response, body) {
-            if (!err && response.statusCode == 200) {
-                var content = JSON.parse(body);
-                Cache.create({
-                    key: video.title,
-                    data: content.document
-                }, function (err, data) {
+            if (!err && response.statusCode === 200) {
+                var result = JSON.parse(body);
+                return cb(null, result);
+            }
+        });
+    }
 
-                });
+    function transcribeStatusCheck (jobId, cb) {
+        request.get({
+            url: statusCheckUrl + jobId,
+            qs: {
+                apikey: process.env.IDOL_API_KEY
+            }
+        }, function (err, response, body) {
+            if (!err && response.statusCode === 200) {
+                var result = JSON.parse(body);
+                return cb(null, result);
             }
         });
     }
 
     return {
+        search: search,
         populateHistory: populateHistory,
-        convertVideo: convertVideo
+        convertVideo: convertVideo,
+        transcribeVide: transcribeVideo,
+        transcribeStatusCheck: transcribeStatusCheck
     };
 })();

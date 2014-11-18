@@ -10,4 +10,4 @@
 
 var Passport = require('passport');
 
-module.exports = Passport.authenticate('youtube', { scope: 'https://www.googleapis.com/auth/youtube' });
+module.exports = Passport.authenticate('youtube', { scope: 'https://www.googleapis.com/auth/youtube https://www.google.com/m8/feeds https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile' });

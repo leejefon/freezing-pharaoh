@@ -24,6 +24,8 @@ module.exports.routes = {
 
     'GET /': 'HomeController.index',
     'GET /search': 'HomeController.search',
+    'GET /transcribe': 'HomeController.transcribe',
+    'GET /transcribe/status/:jobid': 'HomeController.transcribe_status_check',
 
     'GET /oauth/youtube'         : 'HomeController.youtube_login',
     'GET /oauth/youtube/callback': 'HomeController.youtube_callback'
