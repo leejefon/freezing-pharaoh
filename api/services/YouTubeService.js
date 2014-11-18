@@ -50,24 +50,6 @@ module.exports = (function(){
         });
     }
 
-    function getSubtitle (params, cb) {
-        request.get({
-            url: youtubeAPI + '/videos/' + params.youtubeId + '/captions?alt=json',
-            headers: {
-                Authorization: 'Bearer ' + params.accessToken,
-                'X-GData-Key': 'AIzaSyCkHDmByiXvmG-BYVf2omyrzZ5lLHuT1wg'
-            }
-        }, function (err, response, body) {
-            console.log(body);
-            if (!err && response.statusCode === 200) {
-                var result = JSON.parse(body);
-                return cb(null, result);
-            } else {
-                return cb(err);
-            }
-        });
-    }
-
     function convertVideo (video) {
         var file = fs.createWriteStream('/.tmp/downloads/' + video.title + ".mp3");
         var request = http.get(converterAPI + video.link, function (response) {
@@ -109,7 +91,6 @@ module.exports = (function(){
     return {
         search: search,
         populateHistory: populateHistory,
-        getSubtitle: getSubtitle,
         convertVideo: convertVideo,
         transcribeVideo: transcribeVideo,
         transcribeStatusCheck: transcribeStatusCheck
