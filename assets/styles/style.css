@@ -1,5 +1,12 @@
 body {
     background: #EEE;
+    font-family: Ubuntu;
+}
+
+h1 {
+    font-size: 80px;
+    color: #333;
+    margin-top: 100px;
 }
 
 hr {
