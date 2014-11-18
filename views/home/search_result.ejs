@@ -1,0 +1,13 @@
+<div class="jumbotron">
+    <span id="microphone" onclick="speechSwitch()">
+        <i class="fa fa-microphone"></i>
+    </span>
+</div>
+
+<hr />
+
+<ul>
+    <% for (var i in results) { %>
+        <li><img src="<%= results[i].thumbnail %>" /></li>
+    <% } %>
+</ul>
