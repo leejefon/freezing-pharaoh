@@ -38,7 +38,7 @@ module.exports = (function(){
                 // ]
             }, function (err, data) {
                 return cb(null, data.filter(function (item) {
-                    var regex = new RegExp(params.query);
+                    var regex = new RegExp(params.query, "i");
                     return regex.test(item.data.all);
                 }));
             });
