@@ -24,7 +24,8 @@ module.exports = (function(){
 
 	function search_result (req, res) {
 		YouTubeService.search({
-			query: req.query.q
+			query: req.query.q,
+			ytUserId: req.user.username
 		}, function (err, data) {
 			return res.view({
 				results: data

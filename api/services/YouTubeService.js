@@ -27,22 +27,19 @@ module.exports = (function(){
                 apikey: process.env.IDOL_API_KEY
             }
         }, function (err, response, body) {
-            var results = JSON.parse(body).entities.slice(0, 5).map(function (entry) { return entry.text; });
+            var results = JSON.parse(body).entities.slice(0, 5).map(function (entry) { return entry.text; }).join(' ');
 
             // Since text search not enabled in db, query all then filter
             Cache.find({
                 user: params.ytUserId
                 // $or: [
-                    // { 'data.all': { $regex: params.query } },
-                    // { 'data.all': { like: results[0] } },
-                    // { 'data.all': { like: results[1] } },
-                    // { 'data.all': { like: results[2] } },
-                    // { 'data.all': { like: results[3] } },
-                    // { 'data.all': { like: results[4] } }
+                    // { user: params.ytUserId },
+                    // { 'data.all': { $text: { $search: results } } },
                 // ]
             }, function (err, data) {
                 return cb(null, data.filter(function (item) {
-                    return true;
+                    var regex = new RegExp(params.query);
+                    return regex.test(item.data.all);
                 }));
             });
         });
