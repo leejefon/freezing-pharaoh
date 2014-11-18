@@ -30,11 +30,13 @@ recognition.onresult = function(event) {
 }
 
 function speechOn(){
+    $('#recording').show();
     recognition.start();
     recognizing = true;
 }
 
 function speechSwitch(){
+    $('#recording').hide();
     if(recognizing){
         recognition.stop();
         recognizing = false;
@@ -42,3 +44,5 @@ function speechSwitch(){
         speechOn();
     }
 }
+
+$('#recording').hide();
