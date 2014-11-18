@@ -12,6 +12,10 @@ module.exports = (function(){
     var tableName = 'cache';
 
     var attributes = {
+        user: {
+            type: 'string',
+            required: true
+        },
         key: {
             type: 'string',
             required: true

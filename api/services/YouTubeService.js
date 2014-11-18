@@ -31,6 +31,7 @@ module.exports = (function(){
 
             // Since text search not enabled in db, query all then filter
             Cache.find({
+                user: params.ytUserId
                 // $or: [
                     // { 'data.all': { $regex: params.query } },
                     // { 'data.all': { like: results[0] } },
@@ -57,6 +58,8 @@ module.exports = (function(){
             if (!err && response.statusCode === 200) {
                 var videos = JSON.parse(body);
 
+                // return cb(null, videos);
+
                 return cb(null, videos.feed.entry.map(function (entry) {
                     var v = {
                         title: entry.title.$t,
@@ -72,6 +75,7 @@ module.exports = (function(){
                     Cache.findOrCreate({
                         key: entry.id.$t,
                     }, {
+                        user: entry.author[0].yt$userId.$t,
                         key: entry.id.$t,
                         data: v
                     }, function (err, data) {
