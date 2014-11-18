@@ -4,17 +4,21 @@
     </span>
 </div>
 
-<h4 class="text-center">Search: <span class="text-primary"><%= req.query.q %></span></h4>
+<h3 class="text-center">Search: <span class="text-primary"><%= req.query.q %></span></h3>
 <hr />
 
-<% for (var i in results) { %>
-    <div class="media">
-        <a class="media-left" href="<%= results[i].data.link %>">
-            <img src="<%= results[i].data.thumbnail %>" alt="<%= results[i].data.title %>" />
-        </a>
-        <div class="media-body">
-            <h4 class="media-heading"><a href="<%= results[i].data.link %>"><%= results[i].data.title %></a></h4>
-            <%= results[i].data.desc %>
+<% if (results.length === 0) { %>
+    <div class="well">No result found</div>
+<% } else { %>
+    <% for (var i in results) { %>
+        <div class="media">
+            <a class="media-left" href="<%= results[i].data.link %>">
+                <img src="<%= results[i].data.thumbnail %>" alt="<%= results[i].data.title %>" />
+            </a>
+            <div class="media-body">
+                <h4 class="media-heading"><a href="<%= results[i].data.link %>"><%= results[i].data.title %></a></h4>
+                <%= results[i].data.desc %>
+            </div>
         </div>
-    </div>
+    <% } %>
 <% } %>
