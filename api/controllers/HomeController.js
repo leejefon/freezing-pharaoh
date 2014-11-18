@@ -38,7 +38,7 @@ module.exports = (function(){
 	}
 
 	function transcribe_status_check (req, res) {
-		YouTubeService.transcribeStatusCheck(req.param.jobid, function (err, data) {
+		YouTubeService.transcribeStatusCheck(req.param('jobid'), function (err, data) {
 			return res.json(data);
 		});
 	}

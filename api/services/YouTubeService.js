@@ -60,9 +60,10 @@ module.exports = (function(){
 
     function transcribeVideo (video, async, cb) {
         request.get({
-            url: idolAPI,
+            url: idolAPI + '/recognizespeech/v1',
             qs: {
                 url: process.env.PROJECT_URL + '/videos/' + video.title + ".mp3",
+                // url: 'http://taiwanday.ca/videos/' + video.title,
                 apikey: process.env.IDOL_API_KEY
             }
         }, function (err, response, body) {
@@ -91,7 +92,7 @@ module.exports = (function(){
         search: search,
         populateHistory: populateHistory,
         convertVideo: convertVideo,
-        transcribeVide: transcribeVideo,
+        transcribeVideo: transcribeVideo,
         transcribeStatusCheck: transcribeStatusCheck
     };
 })();
