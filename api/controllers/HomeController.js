@@ -10,15 +10,7 @@
 module.exports = (function(){
 
 	function index (req, res) {
-		if (req.user) {
-			YouTubeService.populateHistory({
-				accessToken: req.user.accessToken
-			}, function (err, data) {
-				return res.json(data);
-			});
-		} else {
-			return res.view();
-		}
+		return res.view();
 	}
 
 	function search (req, res) {
@@ -26,6 +18,16 @@ module.exports = (function(){
 			query: req.query.q
 		}, function (err, data) {
 			return res.json(data);
+		});
+	}
+
+	function search_result (req, res) {
+		YouTubeService.search({
+			query: req.query.q
+		}, function (err, data) {
+			return res.view({
+				results: data
+			});
 		});
 	}
 
@@ -54,6 +56,7 @@ module.exports = (function(){
     return {
         index: index,
 		search: search,
+		search_result: search_result,
 		transcribe: transcribe,
 		transcribe_status_check: transcribe_status_check,
 

@@ -1,0 +1,51 @@
+body {
+    background: #EEE;
+}
+
+hr {
+    border-color: #BBB;
+    margin: 20px 50px;
+}
+
+a:hover {
+    text-decoration: none;
+}
+
+.jumbotron {
+    margin-top: 50px;
+    padding: 50px;
+    text-align: center;
+    background: none;
+}
+
+#microphone {
+    display: inline-block;
+    width: 200px;
+    height: 200px;
+    border-radius: 200px;
+    background-color: black;
+    padding-top: 30px;
+}
+
+#microphone i {
+    font-size: 150px;
+    color: white;
+    cursor: pointer;
+}
+
+#microhone:hover {
+    /*background: #666;*/
+}
+
+#microphone:hover i {
+    color: #666;
+}
+
+#youtubeSignin {
+    margin-top: 50px;
+    padding: 20px;
+    border-radius: 5px;
+    font-size: 25px;
+    background: red;
+    color: white;
+}

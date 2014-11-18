@@ -19,8 +19,6 @@ var paths = {
 };
 
 var cssFiles = [
-	'assets/js/vendor/angular-loading-bar/build/loading-bar.min.css',
-	'assets/js/vendor/toastr/toastr.min.css',
 	'assets/styles/style.css'
 ];
 
@@ -36,10 +34,10 @@ gulp.task('uglifyJs', function () {
 });
 
 gulp.task('minifyCSS', function () {
-	// gulp.src(cssFiles)
-	// 	.pipe(concat('style.min.css'))
-	// 	.pipe(minifyCSS())
-	// 	.pipe(gulp.dest(paths.target + '/styles'));
+	gulp.src(cssFiles)
+		.pipe(concat('style.min.css'))
+		.pipe(minifyCSS())
+		.pipe(gulp.dest(paths.target + '/styles'));
 });
 
 gulp.task('compileAssets', function () {
