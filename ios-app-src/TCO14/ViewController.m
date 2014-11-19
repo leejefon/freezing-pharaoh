@@ -12,6 +12,7 @@
 #import <SDWebImage/UIImageView+WebCache.h>
 #import <ASIHTTPRequest/ASIHTTPRequest.h>
 #import "YoutubePlayerViewController.h"
+#import <Foundation/NSCharacterSet.h>
 
 @interface ViewController (){
     MultiplePulsingHaloLayer *multiLayer;
@@ -29,21 +30,30 @@
 @synthesize videoArr;
 
 const unsigned char SpeechKitApplicationKey[] = {0x74, 0x40, 0xf3, 0xc1, 0xe9, 0xbc, 0x0d, 0xf6, 0xbe, 0x94, 0xc4, 0x24, 0x7b, 0x68, 0xe8, 0x9c, 0x4f, 0x91, 0x55, 0xb5, 0x32, 0x88, 0xc6, 0x58, 0xeb, 0xad, 0x88, 0x94, 0xab, 0xb0, 0xe0, 0x1f, 0xf0, 0xd4, 0xe0, 0xda, 0x90, 0xee, 0xd0, 0x4f, 0x82, 0x94, 0x73, 0xfd, 0xfc, 0x5b, 0x99, 0x4b, 0xec, 0xef, 0x00, 0x1f, 0x77, 0xc6, 0x77, 0x62, 0x73, 0x00, 0xf6, 0x1e, 0xb0, 0xd7, 0x3e, 0xa1};
+const BOOL isDEMO = NO;
 
 - (IBAction)resetBtnPressed:(id)sender {
     [_spinner stopAnimating];
-    [UIView animateWithDuration:1. delay:1. options:0 animations:^{
+    [UIView animateWithDuration:1. delay:0. options:0 animations:^{
         [_bgView setFrame:CGRectMake(0, 0, _bgView.frame.size.width, _bgView.frame.size.height)];
     } completion:^(BOOL finished) {
         self.textLbl.text = @"";
         self.videoArr = nil;
         [self.tblView reloadData];
+        if (transactionState == TS_INITIAL) {
+            [self.view.layer insertSublayer:multiLayer atIndex:0];
+            voiceSearch = [[SKRecognizer alloc] initWithType:SKDictationRecognizerType
+                                               detection:SKShortEndOfSpeechDetection
+                                                language:@"en_US"
+                                                delegate:self];
+        }
     }];
     
     
     
     if (transactionState == TS_RECORDING) {
         [voiceSearch stopRecording];
+        transactionState = TS_IDLE;
         [multiLayer removeFromSuperlayer];
     }
     else if (transactionState == TS_IDLE) {
@@ -51,14 +61,6 @@ const unsigned char SpeechKitApplicationKey[] = {0x74, 0x40, 0xf3, 0xc1, 0xe9, 0
         transactionState = TS_INITIAL;
         
         /* Nuance can also create a custom recognition type optimized for your application if neither search nor dictation are appropriate. */
-        
-        if (voiceSearch) voiceSearch = nil;
-        
-        voiceSearch = [[SKRecognizer alloc] initWithType:SKDictationRecognizerType
-                                               detection:SKShortEndOfSpeechDetection
-                                                language:@"en_US"
-                                                delegate:self];
-        [self.view.layer insertSublayer:multiLayer atIndex:0];
     }
 }
 
@@ -101,6 +103,8 @@ const unsigned char SpeechKitApplicationKey[] = {0x74, 0x40, 0xf3, 0xc1, 0xe9, 0
         [self resetBtnPressed:nil];
         isFirstTime = YES;
     }
+    
+    [_bgView setFrame:CGRectMake(0, self.textLbl.text.length?-350:0, _bgView.frame.size.width, _bgView.frame.size.height)];
 }
 
 -(void)gotASentence:(NSString *)sentence{
@@ -132,32 +136,48 @@ const unsigned char SpeechKitApplicationKey[] = {0x74, 0x40, 0xf3, 0xc1, 0xe9, 0
                    });
 }
 
+-(void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:animated];
+    
+}
+
 -(void)animationDone{
     [UIView animateWithDuration:1. delay:1. options:0 animations:^{
         [_bgView setFrame:CGRectMake(0, -350, _bgView.frame.size.width, _bgView.frame.size.height)];
     } completion:^(BOOL finished) {
         [_spinner startAnimating];
-        [self performSelector:@selector(loadFromAPI) withObject:nil afterDelay:2.];
+        [self performSelector:@selector(loadFromAPI) withObject:nil afterDelay:isDEMO?2.:0.];
     }];
 }
 
 -(void)loadFromAPI{
-    __weak ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"https://freezing-pharaoh.herokuapp.com/search?q=%@", self.textLbl]]];
-    [request setCompletionBlock:^{
-        [_spinner stopAnimating];
-        NSError *error = nil;
-        self.videoArr = [NSJSONSerialization JSONObjectWithData:request.responseData options:kNilOptions error:&error];
-        if (error) {
-            [self errorHandler];
-        }else{
-            [self.tblView reloadData];
-        }
-    }];
-    [request setFailedBlock:^{
-        [_spinner stopAnimating];
+    if (isDEMO) {
         [self errorHandler];
-    }];
-    [request startAsynchronous];
+    }else{
+        __weak ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:[NSURL URLWithString:[[NSString stringWithFormat:@"https://gdata.youtube.com/feeds/api/videos?q=%@&orderby=relevance&max-results=20&v=2&alt=json", [self.textLbl.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]]] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]]];
+        [request setCompletionBlock:^{
+            [_spinner stopAnimating];
+            NSError *error = nil;
+            NSMutableArray *arr = [NSMutableArray array];
+            NSArray *resultsArr = [NSJSONSerialization JSONObjectWithData:request.responseData options:kNilOptions error:&error][@"feed"][@"entry"];
+            
+            for (NSDictionary *dic in resultsArr) {
+                [arr addObject:@{@"title": dic[@"title"][@"$t"], @"videoID": dic[@"media$group"][@"yt$videoid"][@"$t"], @"imgURL": [dic[@"media$group"][@"media$thumbnail"] lastObject][@"url"]}];
+            }
+            
+            self.videoArr = arr;
+            if (error) {
+                [self errorHandler];
+            }else{
+                [self.tblView reloadData];
+            }
+        }];
+        [request setFailedBlock:^{
+            [_spinner stopAnimating];
+            [self errorHandler];
+        }];
+        [request startAsynchronous];
+    }
 }
 
 -(void)errorHandler{
@@ -192,8 +212,6 @@ const unsigned char SpeechKitApplicationKey[] = {0x74, 0x40, 0xf3, 0xc1, 0xe9, 0
     NSLog(@"Got results.");
     NSLog(@"Session id [%@].", [SpeechKit sessionID]); // for debugging purpose: printing out the speechkit session id
     
-    transactionState = TS_IDLE;
-    
     NSString *search = results.results.firstObject;
     if (search.length) {
         [self gotASentence:results.results.firstObject];
@@ -202,8 +220,12 @@ const unsigned char SpeechKitApplicationKey[] = {0x74, 0x40, 0xf3, 0xc1, 0xe9, 0
         
         [multiLayer removeFromSuperlayer];
     }else{
-        [self resetBtnPressed:nil];
+        if (transactionState != TS_IDLE) {
+            [self resetBtnPressed:nil];
+        }
     }
+    
+    transactionState = TS_IDLE;
 }
 
 - (void)recognizer:(SKRecognizer *)recognizer didFinishWithError:(NSError *)error suggestion:(NSString *)suggestion
