@@ -8,7 +8,7 @@
  */
 
 var request = require('request');
-var http = require('http');
+var spawn = require('child_process').spawn;
 var fs = require('fs');
 
 module.exports = (function(){
@@ -79,22 +79,34 @@ module.exports = (function(){
                         // do nothing
                     });
 
-                    // convertVideo(v);
+                    // transcribeYouTube(v);
                     return v;
                 }));
             }
         });
     }
 
-    function convertVideo (video) {
-        var file = fs.createWriteStream('/.tmp/downloads/' + video.title + ".mp3");
-        var request = http.get(converterAPI + video.link, function (response) {
-            response.pipe(file);
-            return transcribeVideo(video);
+    function transcribeYouTube (video, cb) {
+        var file = fs.createWriteStream('.tmp/public/' + video.title + ".mp3");
+
+        var curl = spawn('curl', ['-L', video.link]);
+
+        curl.stdout.on('data', function(data) { file.write(data); });
+
+        curl.stdout.on('end', function(data) {
+            file.end();
+        });
+
+        curl.on('exit', function(code) {
+            if (code !== 0) {
+                console.log('Failed: ' + code);
+                return cb({ err: 'err' });
+            }
+            return cb(null, { good: 'good' });
         });
     }
 
-    function transcribeVideo (video, async, cb) {
+    function transcribeVideo (video, cb) {
         request.get({
             url: idolAPI + '/recognizespeech/v1',
             qs: {
@@ -104,7 +116,6 @@ module.exports = (function(){
         }, function (err, response, body) {
             if (!err && response.statusCode === 200) {
                 // Note: since we are using async, we will get an jobid
-
                 var result = JSON.parse(body);
                 return cb(null, result);
             }
@@ -119,6 +130,7 @@ module.exports = (function(){
             }
         }, function (err, response, body) {
             if (!err && response.statusCode === 200) {
+                // TODO: check if it's finished, store in cache
                 var result = JSON.parse(body);
                 return cb(null, result);
             }
@@ -128,7 +140,7 @@ module.exports = (function(){
     return {
         search: search,
         populateHistory: populateHistory,
-        convertVideo: convertVideo,
+        transcribeYouTube: transcribeYouTube,
         transcribeVideo: transcribeVideo,
         transcribeStatusCheck: transcribeStatusCheck
     };

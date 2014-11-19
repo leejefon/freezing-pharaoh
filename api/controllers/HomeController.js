@@ -42,9 +42,10 @@ module.exports = (function(){
 	}
 
 	function transcribe (req, res) {
-		YouTubeService.transcribeVideo({
-			title: req.query.title
-		}, true, function (err, data) {
+		YouTubeService.transcribeYouTube({
+			title: req.query.title,
+			link: req.query.link
+		}, function (err, data) {
 			return res.json(data);
 		});
 	}
